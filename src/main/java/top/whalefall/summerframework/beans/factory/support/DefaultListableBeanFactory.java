@@ -44,7 +44,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
         Map<String, T> result = new HashMap<>();
         beanDefinitionMap.forEach((beanName, beanDefinition) -> {
-            Class<?> beanClass = beanDefinition.getBeanClass();
+            Class<?> beanClass = beanDefinition.beanClass();
             if (type.isAssignableFrom(beanClass)) {
                 result.put(beanName, getBean(beanName, type));
             }
@@ -57,8 +57,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         beanDefinitionMap.keySet().stream()
                 .filter(beanName -> {
                     BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-                    return !(beanDefinition instanceof BeanFactoryPostProcessor) &&
-                            !(beanDefinition instanceof BeanPostProcessor);
+                    return (beanDefinition.beanClass() != BeanFactoryPostProcessor.class) &&
+                            (beanDefinition.beanClass() != BeanPostProcessor.class);
                 })
                 .forEach(this::getBean);
     }

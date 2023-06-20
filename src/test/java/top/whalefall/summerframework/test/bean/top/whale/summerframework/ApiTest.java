@@ -6,12 +6,33 @@ import top.whalefall.summerframework.beans.PropertyValues;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanReference;
 import top.whalefall.summerframework.beans.factory.support.DefaultListableBeanFactory;
+import top.whalefall.summerframework.beans.factory.xml.XmlBeanDefinitionReader;
 import top.whalefall.summerframework.test.bean.UserDao;
 import top.whalefall.summerframework.test.bean.UserService;
 
 public class ApiTest {
+    /**
+     * 测试解析文件注册
+     */
     @Test
-    public void test_BeanFactory() {
+    public void testXml() {
+        // 1.初始化 BeanFactory
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        // 2. 读取配置文件&注册Bean
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        // 3. 获取Bean对象调用方法
+        UserService userService = beanFactory.getBean("userService", UserService.class);
+        userService.queryUserInfo();
+    }
+
+    /**
+     * 测试注入属性
+     */
+    @Test
+    public void testProperty() {
         // 1.初始化 BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 

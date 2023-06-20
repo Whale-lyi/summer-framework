@@ -44,7 +44,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     protected Object createBeanInstance(BeanDefinition beanDefinition, Object[] args) {
         Constructor<?> constructorToUse = null;
-        Class<?> beanClass = beanDefinition.getBeanClass();
+        Class<?> beanClass = beanDefinition.beanClass();
         Constructor<?>[] declaredConstructors = beanClass.getDeclaredConstructors();
         if (args != null) {
             // 处理BeanReference
@@ -79,7 +79,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     protected void applyPropertyValue(String beanName, Object bean, BeanDefinition beanDefinition) {
         try {
-            PropertyValues propertyValues = beanDefinition.getPropertyValues();
+            PropertyValues propertyValues = beanDefinition.propertyValues();
             for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
                 String name = propertyValue.name();
                 Object value = propertyValue.value();
