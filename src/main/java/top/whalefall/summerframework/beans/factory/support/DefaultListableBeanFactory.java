@@ -2,6 +2,7 @@ package top.whalefall.summerframework.beans.factory.support;
 
 
 import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.factory.ListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanFactoryPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
@@ -12,7 +13,7 @@ import java.util.Map;
 /**
  * 综合所有功能, 主要是对Bean注册后的处理
  */
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ListableBeanFactory {
 
     private final Map<String, BeanDefinition> beanDefinitionMap = new HashMap<>();
 

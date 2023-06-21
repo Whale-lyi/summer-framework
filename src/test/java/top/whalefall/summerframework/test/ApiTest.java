@@ -1,4 +1,4 @@
-package top.whalefall.summerframework.test.bean.top.whale.summerframework;
+package top.whalefall.summerframework.test;
 
 import org.junit.Test;
 import top.whalefall.summerframework.beans.PropertyValue;
@@ -7,10 +7,50 @@ import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanReference;
 import top.whalefall.summerframework.beans.factory.support.DefaultListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.xml.XmlBeanDefinitionReader;
+import top.whalefall.summerframework.context.support.ClassPathXmlApplicationContext;
 import top.whalefall.summerframework.test.bean.UserDao;
 import top.whalefall.summerframework.test.bean.UserService;
+import top.whalefall.summerframework.test.common.MyBeanFactoryPostProcessor;
+import top.whalefall.summerframework.test.common.MyBeanPostProcessor;
 
 public class ApiTest {
+
+    @Test
+    public void testContext() {
+        // 1.初始化 BeanFactory
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+
+        // 2. 获取Bean对象调用方法
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果：" + result);
+    }
+
+
+    @Test
+    public void testBeanFactoryPostProcessorAndBeanPostProcessor(){
+        // 1.初始化 BeanFactory
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        // 2. 读取配置文件&注册Bean
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        // 3. BeanDefinition 加载完成 & Bean实例化之前，修改 BeanDefinition 的属性值
+        MyBeanFactoryPostProcessor beanFactoryPostProcessor = new MyBeanFactoryPostProcessor();
+        beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+
+        // 4. Bean实例化之后，修改 Bean 属性信息
+        MyBeanPostProcessor beanPostProcessor = new MyBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(beanPostProcessor);
+
+        // 5. 获取Bean对象调用方法
+        UserService userService = beanFactory.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果：" + result);
+    }
+
+
     /**
      * 测试解析文件注册
      */
@@ -25,7 +65,8 @@ public class ApiTest {
 
         // 3. 获取Bean对象调用方法
         UserService userService = beanFactory.getBean("userService", UserService.class);
-        userService.queryUserInfo();
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果：" + result);
     }
 
     /**
@@ -50,7 +91,8 @@ public class ApiTest {
 
         // 5. UserService 获取bean
         UserService userService = (UserService) beanFactory.getBean("userService");
-        userService.queryUserInfo();
+        String result = userService.queryUserInfo();
+        System.out.println("测试结果：" + result);
     }
 
 }

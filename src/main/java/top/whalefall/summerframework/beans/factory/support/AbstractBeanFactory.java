@@ -45,7 +45,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     public abstract <T> Map<String, T> getBeansOfType(Class<T> type);
 
-    protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
+    public abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
 
     protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException;
 
