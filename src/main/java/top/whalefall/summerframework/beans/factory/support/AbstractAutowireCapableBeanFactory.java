@@ -44,7 +44,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     protected Object createBeanInstance(BeanDefinition beanDefinition, Object[] args) {
         Constructor<?> constructorToUse = null;
-        Class<?> beanClass = beanDefinition.beanClass();
+        Class<?> beanClass = beanDefinition.getBeanClass();
         Constructor<?>[] declaredConstructors = beanClass.getDeclaredConstructors();
         if (args != null) {
             // 处理BeanReference
@@ -52,7 +52,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                     .filter(i -> args[i] instanceof BeanReference)
                     .forEach(i -> {
                         BeanReference beanReference = (BeanReference) args[i];
-                        args[i] = getBean(beanReference.beanName());
+                        args[i] = getBean(beanReference.getBeanName());
                     });
             // 查找符合条件的构造函数
             constructorToUse = Arrays.stream(declaredConstructors)
@@ -79,13 +79,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     protected void applyPropertyValue(String beanName, Object bean, BeanDefinition beanDefinition) {
         try {
-            PropertyValues propertyValues = beanDefinition.propertyValues();
+            PropertyValues propertyValues = beanDefinition.getPropertyValues();
             for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
-                String name = propertyValue.name();
-                Object value = propertyValue.value();
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
                 // A 依赖 B, 获取 B 实例
                 if (value instanceof BeanReference beanReference) {
-                    value = getBean(beanReference.beanName());
+                    value = getBean(beanReference.getBeanName());
                 }
                 // 属性填充
                 BeanUtil.setFieldValue(bean, name, value);

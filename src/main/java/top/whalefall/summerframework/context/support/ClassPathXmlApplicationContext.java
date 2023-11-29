@@ -3,12 +3,10 @@ package top.whalefall.summerframework.context.support;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import top.whalefall.summerframework.beans.BeansException;
-import top.whalefall.summerframework.beans.factory.support.DefaultListableBeanFactory;
-import top.whalefall.summerframework.beans.factory.xml.XmlBeanDefinitionReader;
 
 @Getter
 @NoArgsConstructor
-public class ClassPathXmlApplicationContext extends AbstractRefreshableApplicationContext {
+public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContext {
 
     private String[] configLocations;
 
@@ -28,10 +26,7 @@ public class ClassPathXmlApplicationContext extends AbstractRefreshableApplicati
     }
 
     @Override
-    protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) {
-        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory, this);
-        if (configLocations != null) {
-            beanDefinitionReader.loadBeanDefinitions(configLocations);
-        }
+    protected String[] getConfigLocations() {
+        return configLocations;
     }
 }

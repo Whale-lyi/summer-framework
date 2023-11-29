@@ -2,6 +2,7 @@ package top.whalefall.summerframework.beans.factory.support;
 
 
 import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.factory.ConfigurableListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.ListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * 综合所有功能, 主要是对Bean注册后的处理
  */
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ListableBeanFactory {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
 
     private final Map<String, BeanDefinition> beanDefinitionMap = new HashMap<>();
 
@@ -45,7 +46,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
         Map<String, T> result = new HashMap<>();
         beanDefinitionMap.forEach((beanName, beanDefinition) -> {
-            Class<?> beanClass = beanDefinition.beanClass();
+            Class<?> beanClass = beanDefinition.getBeanClass();
             if (type.isAssignableFrom(beanClass)) {
                 result.put(beanName, getBean(beanName, type));
             }
@@ -58,8 +59,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         beanDefinitionMap.keySet().stream()
                 .filter(beanName -> {
                     BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-                    return (beanDefinition.beanClass() != BeanFactoryPostProcessor.class) &&
-                            (beanDefinition.beanClass() != BeanPostProcessor.class);
+                    return (beanDefinition.getBeanClass() != BeanFactoryPostProcessor.class) &&
+                            (beanDefinition.getBeanClass() != BeanPostProcessor.class);
                 })
                 .forEach(this::getBean);
     }

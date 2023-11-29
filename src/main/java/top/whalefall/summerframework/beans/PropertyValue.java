@@ -1,3 +1,11 @@
 package top.whalefall.summerframework.beans;
 
-public record PropertyValue (String name, Object value) {}
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class PropertyValue {
+    private final String name;
+    private final Object value;
+}

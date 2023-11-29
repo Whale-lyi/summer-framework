@@ -1,15 +1,17 @@
 package top.whalefall.summerframework.context.support;
 
 import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.factory.ConfigurableListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.config.BeanFactoryPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import top.whalefall.summerframework.context.ApplicationContext;
+import top.whalefall.summerframework.context.ConfigurableApplicationContext;
 import top.whalefall.summerframework.core.io.DefaultResourceLoader;
 
 import java.util.Map;
 
-public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ApplicationContext {
+public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
     /**
      * 模范方法
      */
@@ -18,7 +20,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         // 1. 创建 BeanFactory, 并加载 BeanDefinition
         refreshBeanFactory();
         // 2, 获取 BeanFactory
-        AbstractAutowireCapableBeanFactory beanFactory = getBeanFactory();
+        ConfigurableListableBeanFactory beanFactory = getBeanFactory();
         // 3. 在 Bean 实例化之前，执行 BeanFactoryPostProcessor (Invoke factory processors registered as beans in the context.)
         invokeBeanFactoryPostProcessors(beanFactory);
         // 4. BeanPostProcessor 需要提前于其他 Bean 对象实例化之前执行注册操作
@@ -29,16 +31,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     protected abstract void refreshBeanFactory() throws BeansException;
 
-    protected abstract AbstractAutowireCapableBeanFactory getBeanFactory();
+    protected abstract ConfigurableListableBeanFactory getBeanFactory();
 
-    private void invokeBeanFactoryPostProcessors(AbstractAutowireCapableBeanFactory beanFactory) {
+    private void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         Map<String, BeanFactoryPostProcessor> beanFactoryPostProcessorMap = beanFactory.getBeansOfType(BeanFactoryPostProcessor.class);
         for (BeanFactoryPostProcessor beanFactoryPostProcessor : beanFactoryPostProcessorMap.values()) {
             beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
         }
     }
 
-    private void registerBeanPostProcessors(AbstractAutowireCapableBeanFactory beanFactory) {
+    private void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         Map<String, BeanPostProcessor> beanPostProcessorMap = beanFactory.getBeansOfType(BeanPostProcessor.class);
         for (BeanPostProcessor beanPostProcessor : beanPostProcessorMap.values()) {
             beanFactory.addBeanPostProcessor(beanPostProcessor);
@@ -58,6 +60,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
         return getBeanFactory().getBean(name, requiredType);
+    }
+
+    @Override
+    public String[] getBeanDefinitionNames() {
+        return getBeanFactory().getBeanDefinitionNames();
     }
 
     @Override

@@ -16,7 +16,7 @@ public class PropertyValues {
 
     public PropertyValue getPropertyValue(String propertyName) {
         for (PropertyValue pv : this.propertyValueList) {
-            if (pv.name().equals(propertyName)) {
+            if (pv.getName().equals(propertyName)) {
                 return pv;
             }
         }

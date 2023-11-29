@@ -102,7 +102,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 Object value = CharSequenceUtil.isNotEmpty(attrRef) ? new BeanReference(attrRef) : attrValue;
                 // 创建属性信息
                 PropertyValue propertyValue = new PropertyValue(attrName, value);
-                beanDefinition.propertyValues().addPropertyValue(propertyValue);
+                beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
             }
             if (getRegistry().containsBeanDefinition(beanName)) {
                 throw new BeansException("Duplicate beanName[" + beanName + "] is not allowed");

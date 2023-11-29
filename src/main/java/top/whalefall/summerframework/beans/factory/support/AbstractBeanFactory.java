@@ -1,6 +1,7 @@
 package top.whalefall.summerframework.beans.factory.support;
 
 
+import lombok.Getter;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
@@ -14,6 +15,7 @@ import java.util.Map;
  * 综合DefaultSingletonBeanRegistry和ConfigurableBeanFactory的功能
  * 主要实现获取bean, 使用模板方法模式, 部分步骤在子类实现
  */
+@Getter
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
 
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
@@ -43,9 +45,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         return createBean(name, beanDefinition, args);
     }
 
-    public abstract <T> Map<String, T> getBeansOfType(Class<T> type);
-
-    public abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
+    protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
 
     protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException;
 
@@ -56,8 +56,4 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         this.beanPostProcessors.add(beanPostProcessor);
     }
 
-    @Override
-    public List<BeanPostProcessor> getBeanPostProcessors() {
-        return beanPostProcessors;
-    }
 }
