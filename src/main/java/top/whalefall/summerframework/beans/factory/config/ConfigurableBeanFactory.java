@@ -1,9 +1,6 @@
 package top.whalefall.summerframework.beans.factory.config;
 
-import top.whalefall.summerframework.beans.factory.BeanFactory;
 import top.whalefall.summerframework.beans.factory.HierarchicalBeanFactory;
-
-import java.util.List;
 
 /**
  * 提供配置Factory的各种方法
