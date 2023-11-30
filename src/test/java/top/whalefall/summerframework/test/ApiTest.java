@@ -16,6 +16,17 @@ import top.whalefall.summerframework.test.common.MyBeanPostProcessor;
 public class ApiTest {
 
     @Test
+    public void testAwareMethod() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_demo8.xml");
+        applicationContext.registerShutdownHook();
+
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        System.out.println(userService.queryUserInfo());
+        System.out.println("ApplicationContextAware: " + userService.getApplicationContext());
+        System.out.println("BeanFactoryAware: " + userService.getBeanFactory());
+    }
+
+    @Test
     public void testInitAndDestroyMethod() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_demo8.xml");
         applicationContext.registerShutdownHook();

@@ -6,6 +6,7 @@ import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.ConfigurableBeanFactory;
+import top.whalefall.summerframework.util.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.Map;
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
 
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    private final ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
     @Override
     public Object getBean(String name) throws BeansException {
