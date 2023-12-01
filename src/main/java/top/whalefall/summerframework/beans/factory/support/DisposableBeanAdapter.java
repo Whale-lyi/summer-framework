@@ -21,7 +21,7 @@ public class DisposableBeanAdapter implements DisposableBean {
     }
 
     @Override
-    public void destroy() throws BeansException {
+    public void destroy() throws Exception {
         boolean isDisposableBean = bean instanceof DisposableBean;
         // 1. 实现接口 DisposableBean
         if (isDisposableBean) {
@@ -35,8 +35,6 @@ public class DisposableBeanAdapter implements DisposableBean {
                 destroyMethod.invoke(bean);
             } catch (NoSuchMethodException e) {
                 throw new BeansException("Couldn't find a destroy method named '" + destroyMethodName + "' on bean with name '" + beanName + "'");
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new BeansException("Couldn't invoke a destroy method named '" + destroyMethodName + "' on bean with name '" + beanName + "'");
             }
         }
     }

@@ -1,57 +1,47 @@
 package top.whalefall.summerframework.test.bean;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import top.whalefall.summerframework.beans.BeansException;
-import top.whalefall.summerframework.beans.factory.*;
-import top.whalefall.summerframework.context.ApplicationContext;
-import top.whalefall.summerframework.context.ApplicationContextAware;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware, InitializingBean, DisposableBean {
-
-    private ApplicationContext applicationContext;
-    private BeanFactory beanFactory;
-
+public class UserService {
     private String uId;
+
     private String company;
+
     private String location;
-    private UserDao userDao;
+
+    private IUserDao userDao;
 
     public String queryUserInfo() {
         return userDao.queryUserName(uId)+", 公司:"+company+", 地点:"+location;
     }
 
-    @Override
-    public void destroy() throws BeansException {
-        System.out.println("执行：UserService.destroy");
+    public void setuId(String uId) {
+        this.uId = uId;
     }
 
-    @Override
-    public void afterPropertiesSet() throws BeansException {
-        System.out.println("执行：UserService.afterPropertiesSet");
+    public void setCompany(String company) {
+        this.company = company;
     }
 
-    @Override
-    public void setBeanClassLoader(ClassLoader classLoader) throws BeansException {
-        System.out.println("ClassLoader: " + classLoader);
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
+    public void setUserDao(IUserDao userDao) {
+        this.userDao = userDao;
     }
 
-    @Override
-    public void setBeanName(String name) throws BeansException {
-        System.out.println("BeanName: " + name);
+    public String getuId() {
+        return uId;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public String getCompany() {
+        return company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public IUserDao getUserDao() {
+        return userDao;
     }
 }

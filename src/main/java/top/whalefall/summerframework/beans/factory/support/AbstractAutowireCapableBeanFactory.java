@@ -26,22 +26,32 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     @Override
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
+        Object bean = null;
         try {
-            Object bean = createBeanInstance(beanDefinition, args);
+            bean = createBeanInstance(beanDefinition, args);
             // 填充属性
             applyPropertyValue(beanName, bean, beanDefinition);
             // 执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             bean = initializeBean(beanName, bean, beanDefinition);
-            // 注册实现了 DisposableBean 接口的 bean
-            registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
-            addSingleton(beanName, bean);
-            return bean;
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
+
+        // 注册实现了 DisposableBean 接口的 bean
+        registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
+
+        // 判断作用域
+        if (beanDefinition.isSingleton()) {
+            addSingleton(beanName, bean);
+        }
+        return bean;
     }
 
     protected void registerDisposableBeanIfNecessary(String beanName, Object bean, BeanDefinition beanDefinition) {
+        // 非 Singleton 类型的 Bean 不执行销毁方法
+        if (!beanDefinition.isSingleton()) {
+            return;
+        }
         if (bean instanceof DisposableBean || CharSequenceUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
         }
@@ -135,7 +145,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return wrappedBean;
     }
 
-    private void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) {
+    private void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) throws Exception {
         boolean isInitializingBean = bean instanceof InitializingBean;
         // 1. 实现 InitializingBean 接口方式
         if (isInitializingBean) {
@@ -149,8 +159,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 initMethod.invoke(bean);
             } catch (NoSuchMethodException e) {
                 throw new BeansException("Could not find an init method named '" + initMethodName + "' on bean with name '" + beanName + "'");
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new BeansException("Could not invoke an init method named '" + initMethodName + "' on bean with name '" + beanName + "'", e);
             }
         }
     }
