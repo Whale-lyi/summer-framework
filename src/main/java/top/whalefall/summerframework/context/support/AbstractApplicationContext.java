@@ -6,14 +6,25 @@ import top.whalefall.summerframework.beans.factory.config.BeanFactoryPostProcess
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import top.whalefall.summerframework.context.ApplicationContext;
+import top.whalefall.summerframework.context.ApplicationEvent;
+import top.whalefall.summerframework.context.ApplicationListener;
 import top.whalefall.summerframework.context.ConfigurableApplicationContext;
+import top.whalefall.summerframework.context.event.ApplicationEventMulticaster;
+import top.whalefall.summerframework.context.event.ContextClosedEvent;
+import top.whalefall.summerframework.context.event.ContextRefreshedEvent;
+import top.whalefall.summerframework.context.event.SimpleApplicationEventMulticaster;
 import top.whalefall.summerframework.core.io.DefaultResourceLoader;
 
+import java.util.Collection;
 import java.util.Map;
 
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
+    private static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+
+    private ApplicationEventMulticaster applicationEventMulticaster;
+
     /**
-     * 模范方法
+     * 模板方法
      */
     @Override
     public void refresh() {
@@ -27,8 +38,36 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         invokeBeanFactoryPostProcessors(beanFactory);
         // 5. BeanPostProcessor 需要提前于其他 Bean 对象实例化之前执行注册操作
         registerBeanPostProcessors(beanFactory);
-        // 6. 提前实例化单例Bean对象
+        // 6. 初始化事件发布者
+        initApplicationEventMulticaster();
+        // 7. 注册事件监听器
+        registerListeners();
+        // 8. 提前实例化单例Bean对象
         beanFactory.preInstantiateSingletons();
+        // 9. 发布容器刷新完成事件
+        finishRefresh();
+    }
+
+    private void registerListeners() {
+        Collection<ApplicationListener> applicationListeners = getBeansOfType(ApplicationListener.class).values();
+        for (ApplicationListener applicationListener : applicationListeners) {
+            applicationEventMulticaster.addApplicationListener(applicationListener);
+        }
+    }
+
+    private void initApplicationEventMulticaster() {
+        ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+        applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
+        beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, applicationEventMulticaster);
+    }
+
+    private void finishRefresh() {
+        publishEvent(new ContextRefreshedEvent(this));
+    }
+
+    @Override
+    public void publishEvent(ApplicationEvent event) {
+        applicationEventMulticaster.multicastEvent(event);
     }
 
     protected abstract void refreshBeanFactory() throws BeansException;
@@ -56,6 +95,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     @Override
     public void close() {
+        // 发布容器关闭事件
+        publishEvent(new ContextClosedEvent(this));
+        // 执行销毁单例bean的方法
         getBeanFactory().destroySingletons();
     }
 

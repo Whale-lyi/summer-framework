@@ -42,7 +42,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         // 判断作用域
         if (beanDefinition.isSingleton()) {
-            addSingleton(beanName, bean);
+            registerSingleton(beanName, bean);
         }
         return bean;
     }

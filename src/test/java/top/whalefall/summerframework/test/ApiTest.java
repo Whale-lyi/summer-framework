@@ -12,8 +12,17 @@ import top.whalefall.summerframework.test.bean.UserDao;
 import top.whalefall.summerframework.test.bean.UserService;
 import top.whalefall.summerframework.test.common.MyBeanFactoryPostProcessor;
 import top.whalefall.summerframework.test.common.MyBeanPostProcessor;
+import top.whalefall.summerframework.test.event.CustomEvent;
 
 public class ApiTest {
+
+    @Test
+    public void test_event() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_demo10.xml");
+        applicationContext.publishEvent(new CustomEvent(applicationContext, 1019129009086763L, "成功了！"));
+
+        applicationContext.registerShutdownHook();
+    }
 
     @Test
     public void test_factory_bean() {
