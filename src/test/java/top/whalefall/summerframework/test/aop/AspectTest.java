@@ -4,12 +4,12 @@ import org.junit.Test;
 import top.whalefall.summerframework.aop.AdvisedSupport;
 import top.whalefall.summerframework.aop.TargetSource;
 import top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcut;
-import top.whalefall.summerframework.aop.framework.CglibAopProxy;
-import top.whalefall.summerframework.aop.framework.JdkDynamicAopProxy;
 import top.whalefall.summerframework.aop.framework.ProxyFactory;
+import top.whalefall.summerframework.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import top.whalefall.summerframework.test.bean.AwareService;
 import top.whalefall.summerframework.test.bean.IUserService;
 import top.whalefall.summerframework.test.bean.UserService;
+import top.whalefall.summerframework.test.common.UserServiceBeforeAdvice;
 import top.whalefall.summerframework.test.common.UserServiceInterceptor;
 
 import java.lang.reflect.Method;
@@ -20,6 +20,30 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @date 2025/2/7
  */
 public class AspectTest {
+
+	/**
+	 * 测试BeforeAdvice
+	 * @throws Exception
+	 */
+	@Test
+	public void testBeforeAdvice() throws Exception {
+		// 目标对象
+		IUserService userService = new UserService();
+
+		//设置BeforeAdvice
+		UserServiceBeforeAdvice beforeAdvice = new UserServiceBeforeAdvice();
+		MethodBeforeAdviceInterceptor methodInterceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
+
+		// 组装代理信息
+		AdvisedSupport advisedSupport = new AdvisedSupport();
+		advisedSupport.setMethodInterceptor(methodInterceptor);
+		advisedSupport.setTargetSource(new TargetSource(userService));
+		advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* top.whalefall.summerframework.test.bean.IUserService.*(..))"));
+
+		IUserService jdkProxy = (IUserService) new ProxyFactory(advisedSupport).getProxy();
+		// 测试调用
+		System.out.println("测试结果：" + jdkProxy.register("jack"));
+	}
 
 	/**
 	 * 测试动态代理和代理工厂
