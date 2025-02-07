@@ -10,7 +10,7 @@ import java.util.Map;
 public class ProxyBeanFactory implements FactoryBean<IUserDao> {
 
     @Override
-    public IUserDao getObject() throws Exception {
+    public IUserDao getObject() {
         InvocationHandler handler = ((proxy, method, args) -> {
             Map<String, String> hashMap = new HashMap<>();
             hashMap.put("10001", "小傅哥");

@@ -1,9 +1,13 @@
 package top.whalefall.summerframework.test.bean;
 
+import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.factory.DisposableBean;
+import top.whalefall.summerframework.beans.factory.InitializingBean;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserDao {
+public class UserDao implements IUserDao {
 
     private static final Map<String, String> hashMap = new HashMap<>();
 
@@ -19,6 +23,7 @@ public class UserDao {
         hashMap.clear();
     }
 
+    @Override
     public String queryUserName(String uId) {
         return hashMap.get(uId);
     }

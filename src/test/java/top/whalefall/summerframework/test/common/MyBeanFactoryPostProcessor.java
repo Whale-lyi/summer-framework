@@ -13,11 +13,11 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-
+        System.out.println("MyBeanFactoryPostProcessor#postProcessBeanFactory");
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition("userService");
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
 
-        propertyValues.addPropertyValue(new PropertyValue("company", "改为：字节跳动"));
+        propertyValues.addPropertyValue(new PropertyValue("company", "字节跳动"));
     }
 
 }

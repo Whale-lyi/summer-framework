@@ -1,6 +1,13 @@
 package top.whalefall.summerframework.test.bean;
 
-public class UserService {
+import lombok.Data;
+import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.factory.DisposableBean;
+import top.whalefall.summerframework.beans.factory.InitializingBean;
+
+@Data
+public class UserService implements IUserService, InitializingBean, DisposableBean {
+
     private String uId;
 
     private String company;
@@ -9,39 +16,24 @@ public class UserService {
 
     private IUserDao userDao;
 
+    @Override
     public String queryUserInfo() {
         return userDao.queryUserName(uId)+", 公司:"+company+", 地点:"+location;
     }
 
-    public void setuId(String uId) {
-        this.uId = uId;
+    @Override
+    public String register(String userName) {
+        return "注册用户：" + userName + " success！";
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("执行：UserService.destroy");
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    @Override
+    public void afterPropertiesSet() throws BeansException {
+        System.out.println("执行：UserService.afterPropertiesSet");
     }
 
-    public void setUserDao(IUserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public String getuId() {
-        return uId;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public IUserDao getUserDao() {
-        return userDao;
-    }
 }

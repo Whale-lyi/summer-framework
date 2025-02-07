@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean class="top.whalefall.summerframework.test.common.event.ContextRefreshedEventListener"/>
+
+    <bean class="top.whalefall.summerframework.test.common.event.CustomEventListener"/>
+
+    <bean class="top.whalefall.summerframework.test.common.event.ContextClosedEventListener"/>
+
+</beans>

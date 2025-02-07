@@ -1,4 +1,4 @@
-package top.whalefall.summerframework.test.event;
+package top.whalefall.summerframework.test.common.event;
 
 import top.whalefall.summerframework.context.ApplicationListener;
 
