@@ -6,6 +6,7 @@ import top.whalefall.summerframework.aop.TargetSource;
 import top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcut;
 import top.whalefall.summerframework.aop.framework.CglibAopProxy;
 import top.whalefall.summerframework.aop.framework.JdkDynamicAopProxy;
+import top.whalefall.summerframework.aop.framework.ProxyFactory;
 import top.whalefall.summerframework.test.bean.AwareService;
 import top.whalefall.summerframework.test.bean.IUserService;
 import top.whalefall.summerframework.test.bean.UserService;
@@ -20,6 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class AspectTest {
 
+	/**
+	 * 测试动态代理和代理工厂
+	 */
 	@Test
 	public void testDynamicProxy() {
 		// 目标对象
@@ -32,16 +36,17 @@ public class AspectTest {
 		advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* top.whalefall.summerframework.test.bean.IUserService.*(..))"));
 
 		// 代理对象(JdkDynamicAopProxy)
-		IUserService jdkProxy = (IUserService) new JdkDynamicAopProxy(advisedSupport).getProxy();
+		advisedSupport.setProxyTargetClass(false);
+		IUserService jdkProxy = (IUserService) new ProxyFactory(advisedSupport).getProxy();
 		// 测试调用
 		System.out.println("测试结果：" + jdkProxy.register("jack"));
 
 		// 代理对象(Cglib2AopProxy)
-		IUserService cglibProxy = (IUserService) new CglibAopProxy(advisedSupport).getProxy();
+		advisedSupport.setProxyTargetClass(true);
+		IUserService cglibProxy = (IUserService) new ProxyFactory(advisedSupport).getProxy();
 		// 测试调用
 		System.out.println("测试结果：" + cglibProxy.register("花花"));
 	}
-
 
 	/**
 	 * 测试切点表达式匹配
