@@ -72,10 +72,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
         for (int i = 0; i < childNodes.getLength(); i++) {
             // 判断元素
-            if (!(childNodes.item(i) instanceof Element bean) || !"bean".equals(childNodes.item(i).getNodeName())) {
+            if (!(childNodes.item(i) instanceof Element) || !"bean".equals(childNodes.item(i).getNodeName())) {
                 continue;
             }
             // 解析标签
+            Element bean = (Element) childNodes.item(i);
             String id = bean.getAttribute("id");
             String name = bean.getAttribute("name");
             String className = bean.getAttribute("class");
@@ -98,10 +99,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             }
             // 读取属性并填充
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
-                if (!(bean.getChildNodes().item(j) instanceof Element property) || !"property".equals(bean.getChildNodes().item(j).getNodeName())) {
+                if (!(bean.getChildNodes().item(j) instanceof Element) || !"property".equals(bean.getChildNodes().item(j).getNodeName())) {
                     continue;
                 }
                 // 解析标签
+                Element property = (Element) bean.getChildNodes().item(j);
                 String attrName = property.getAttribute("name");
                 String attrValue = property.getAttribute("value");
                 String attrRef = property.getAttribute("ref");

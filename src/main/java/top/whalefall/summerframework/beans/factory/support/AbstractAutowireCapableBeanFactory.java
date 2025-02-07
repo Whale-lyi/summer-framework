@@ -12,7 +12,6 @@ import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -104,8 +103,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
                 String name = propertyValue.getName();
                 Object value = propertyValue.getValue();
-                // A 依赖 B, 获取 B 实例
-                if (value instanceof BeanReference beanReference) {
+                if (value instanceof BeanReference) {
+                    // A 依赖 B，获取 B 的实例化
+                    BeanReference beanReference = (BeanReference) value;
                     value = getBean(beanReference.getBeanName());
                 }
                 // 属性填充
@@ -119,14 +119,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
         // invokeAwareMethods
         if (bean instanceof Aware) {
-            if (bean instanceof BeanFactoryAware beanFactoryAware) {
-                beanFactoryAware.setBeanFactory(this);
+            if (bean instanceof BeanFactoryAware) {
+                ((BeanFactoryAware) bean).setBeanFactory(this);
             }
-            if (bean instanceof BeanClassLoaderAware beanClassLoaderAware) {
-                beanClassLoaderAware.setBeanClassLoader(getBeanClassLoader());
+            if (bean instanceof BeanClassLoaderAware) {
+                ((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
             }
-            if (bean instanceof BeanNameAware beanNameAware) {
-                beanNameAware.setBeanName(beanName);
+            if (bean instanceof BeanNameAware) {
+                ((BeanNameAware) bean).setBeanName(beanName);
             }
         }
 
