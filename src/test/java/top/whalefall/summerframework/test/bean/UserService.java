@@ -3,7 +3,9 @@ package top.whalefall.summerframework.test.bean;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.DisposableBean;
 import top.whalefall.summerframework.beans.factory.InitializingBean;
+import top.whalefall.summerframework.stereotype.Component;
 
+@Component
 public class UserService implements IUserService, InitializingBean, DisposableBean {
 
     private String uId;

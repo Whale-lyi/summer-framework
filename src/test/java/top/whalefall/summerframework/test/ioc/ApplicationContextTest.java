@@ -1,8 +1,10 @@
 package top.whalefall.summerframework.test.ioc;
 
+import org.assertj.core.api.Java6Assertions;
 import org.junit.Test;
 import top.whalefall.summerframework.context.support.ClassPathXmlApplicationContext;
 import top.whalefall.summerframework.test.bean.AwareService;
+import top.whalefall.summerframework.test.bean.IUserService;
 import top.whalefall.summerframework.test.bean.UserService;
 import top.whalefall.summerframework.test.common.event.CustomEvent;
 
@@ -13,6 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @date 2025/2/7
  */
 public class ApplicationContextTest {
+
+	@Test
+	public void testScanPackage() {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_package_scan.xml");
+
+		IUserService userService = applicationContext.getBean("userService", IUserService.class);
+		System.out.println(userService.register("lisi"));
+	}
 
 	/**
 	 * 测试 FactoryBean
