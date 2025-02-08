@@ -7,6 +7,7 @@ import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.ConfigurableBeanFactory;
 import top.whalefall.summerframework.util.ClassUtils;
+import top.whalefall.summerframework.util.StringValueResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
 
     private final ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
+
+    private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
 
     @Override
     public Object getBean(String name) throws BeansException {
@@ -79,5 +82,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
     public ClassLoader getBeanClassLoader() {
         return beanClassLoader;
+    }
+
+    @Override
+    public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+        this.embeddedValueResolvers.add(valueResolver);
+    }
+
+    @Override
+    public String resolveEmbeddedValue(String value) {
+        String result = value;
+        for (StringValueResolver resolver : embeddedValueResolvers) {
+            result = resolver.resolveStringValue(result);
+        }
+        return result;
     }
 }

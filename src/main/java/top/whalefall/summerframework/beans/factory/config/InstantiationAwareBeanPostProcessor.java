@@ -1,6 +1,7 @@
 package top.whalefall.summerframework.beans.factory.config;
 
 import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.PropertyValues;
 
 /**
  * @author Liu Yu
@@ -18,5 +19,16 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
      * @throws BeansException
      */
     Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException;
+
+    /**
+     * bean实例化之后，设置属性之前执行
+     *
+     * @param pvs
+     * @param bean
+     * @param beanName
+     * @return
+     * @throws BeansException
+     */
+    PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException;
 
 }

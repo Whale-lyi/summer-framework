@@ -16,6 +16,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ApplicationContextTest {
 
+	/**
+	 * 测试 @Value
+	 */
+	@Test
+	public void testValueAnnotation() throws Exception {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_value_annotation.xml");
+
+		UserService userService = applicationContext.getBean("userService", UserService.class);
+		System.out.println(userService);
+		assertThat(userService.getCompany()).isEqualTo("Tencent");
+		assertThat(userService.getLocation()).isEqualTo("Shang Hai");
+	}
+
+	/**
+	 * 测试包扫描
+	 */
 	@Test
 	public void testScanPackage() {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_package_scan.xml");

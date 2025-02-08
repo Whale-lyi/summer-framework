@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean class="top.whalefall.summerframework.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:userService.properties" />
+    </bean>
+
+    <component-scan base-package="top.whalefall.summerframework.test.bean"/>
+
+</beans>

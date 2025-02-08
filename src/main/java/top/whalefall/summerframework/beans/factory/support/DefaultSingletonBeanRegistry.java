@@ -44,7 +44,6 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         disposableBeans.put(beanName, bean);
     }
 
-    @Override
     public void destroySingletons() {
         Object[] disposableBeanNames = disposableBeans.keySet().toArray();
         for (Object beanName : disposableBeanNames) {

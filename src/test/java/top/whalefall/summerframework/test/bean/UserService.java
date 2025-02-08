@@ -3,6 +3,7 @@ package top.whalefall.summerframework.test.bean;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.DisposableBean;
 import top.whalefall.summerframework.beans.factory.InitializingBean;
+import top.whalefall.summerframework.beans.factory.annotation.Value;
 import top.whalefall.summerframework.stereotype.Component;
 
 @Component
@@ -10,8 +11,10 @@ public class UserService implements IUserService, InitializingBean, DisposableBe
 
     private String uId;
 
+    @Value("${company}")
     private String company;
 
+    @Value("${location}")
     private String location;
 
     private IUserDao userDao;
@@ -66,5 +69,15 @@ public class UserService implements IUserService, InitializingBean, DisposableBe
 
     public void setUserDao(IUserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Override
+    public String toString() {
+        return "UserService{" +
+                "uId='" + uId + '\'' +
+                ", company='" + company + '\'' +
+                ", location='" + location + '\'' +
+                ", userDao=" + userDao +
+                '}';
     }
 }

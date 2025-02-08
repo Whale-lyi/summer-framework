@@ -9,8 +9,4 @@ public interface SingletonBeanRegistry {
 
     void registerSingleton(String beanName, Object singletonObject);
 
-    /**
-     * 销毁单例对象
-     */
-    void destroySingletons();
 }

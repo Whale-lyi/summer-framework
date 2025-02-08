@@ -6,6 +6,7 @@ import top.whalefall.summerframework.aop.*;
 import top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import top.whalefall.summerframework.aop.framework.ProxyFactory;
 import top.whalefall.summerframework.beans.BeansException;
+import top.whalefall.summerframework.beans.PropertyValues;
 import top.whalefall.summerframework.beans.factory.BeanFactory;
 import top.whalefall.summerframework.beans.factory.BeanFactoryAware;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
@@ -78,5 +79,10 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
+    }
+
+    @Override
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+        return pvs;
     }
 }

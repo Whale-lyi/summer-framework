@@ -1,6 +1,7 @@
 package top.whalefall.summerframework.context.annotation;
 
 import cn.hutool.core.util.StrUtil;
+import top.whalefall.summerframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.support.BeanDefinitionRegistry;
 import top.whalefall.summerframework.stereotype.Component;
@@ -13,6 +14,8 @@ import java.util.Set;
  * @date 2025-02-08 18:31:08
  */
 public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateComponentProvider {
+
+    public static final String AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME = "top.whalefall.summerframework.beans.factory.annotation.internalAutowiredAnnotationProcessor";
 
     private final BeanDefinitionRegistry registry;
 
@@ -35,6 +38,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
                 registry.registerBeanDefinition(beanName, candidate);
             }
         }
+        //注册处理 @Autowired 和 @Value 注解的 BeanPostProcessor
+        registry.registerBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME, new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));
     }
 
     /**
