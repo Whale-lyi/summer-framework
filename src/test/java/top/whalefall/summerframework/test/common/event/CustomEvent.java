@@ -1,11 +1,8 @@
 package top.whalefall.summerframework.test.common.event;
 
-import lombok.Getter;
-import lombok.Setter;
 import top.whalefall.summerframework.context.event.ApplicationContextEvent;
 
-@Getter
-@Setter
+
 public class CustomEvent extends ApplicationContextEvent {
     private Long id;
     private String message;
@@ -22,4 +19,19 @@ public class CustomEvent extends ApplicationContextEvent {
         this.message = message;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

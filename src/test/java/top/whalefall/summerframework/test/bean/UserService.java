@@ -1,11 +1,9 @@
 package top.whalefall.summerframework.test.bean;
 
-import lombok.Data;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.DisposableBean;
 import top.whalefall.summerframework.beans.factory.InitializingBean;
 
-@Data
 public class UserService implements IUserService, InitializingBean, DisposableBean {
 
     private String uId;
@@ -36,4 +34,35 @@ public class UserService implements IUserService, InitializingBean, DisposableBe
         System.out.println("执行：UserService.afterPropertiesSet");
     }
 
+    public IUserDao getUserDao() {
+        return userDao;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public void setUserDao(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 }

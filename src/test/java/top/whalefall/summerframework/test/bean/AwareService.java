@@ -1,7 +1,6 @@
 package top.whalefall.summerframework.test.bean;
 
 
-import lombok.Data;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.BeanFactory;
 import top.whalefall.summerframework.beans.factory.BeanFactoryAware;
@@ -12,7 +11,6 @@ import top.whalefall.summerframework.context.ApplicationContextAware;
  * @author derekyi
  * @date 2020/11/22
  */
-@Data
 public class AwareService implements ApplicationContextAware, BeanFactoryAware {
 
 	private ApplicationContext applicationContext;
@@ -34,4 +32,11 @@ public class AwareService implements ApplicationContextAware, BeanFactoryAware {
 		this.applicationContext = applicationContext;
 	}
 
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
+	public BeanFactory getBeanFactory() {
+		return beanFactory;
+	}
 }

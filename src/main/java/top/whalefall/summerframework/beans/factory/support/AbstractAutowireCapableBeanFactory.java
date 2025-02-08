@@ -6,10 +6,7 @@ import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.PropertyValue;
 import top.whalefall.summerframework.beans.PropertyValues;
 import top.whalefall.summerframework.beans.factory.*;
-import top.whalefall.summerframework.beans.factory.config.AutowireCapableBeanFactory;
-import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
-import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
-import top.whalefall.summerframework.beans.factory.config.BeanReference;
+import top.whalefall.summerframework.beans.factory.config.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -21,10 +18,48 @@ import java.util.stream.IntStream;
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
-    private final InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
+    private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
 
     @Override
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
+        // 如果bean需要代理，则直接返回代理对象
+        Object bean = resolveBeforeInstantiation(beanName, beanDefinition);
+        if (bean != null) {
+            return bean;
+        }
+
+        return doCreateBean(beanName, beanDefinition, args);
+    }
+
+    /**
+     * 执行InstantiationAwareBeanPostProcessor的方法，如果bean需要代理，直接返回代理对象
+     *
+     * @param beanName
+     * @param beanDefinition
+     * @return
+     */
+    protected Object resolveBeforeInstantiation(String beanName, BeanDefinition beanDefinition) {
+        Object bean = applyBeanPostProcessorsBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
+        if (bean != null) {
+            bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+        }
+        return bean;
+    }
+
+    protected Object applyBeanPostProcessorsBeforeInstantiation(Class<?> beanClass, String beanName) {
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+                Object result = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessBeforeInstantiation(beanClass, beanName);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected Object doCreateBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
         Object bean = null;
         try {
             bean = createBeanInstance(beanDefinition, args);
@@ -187,6 +222,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             result = current;
         }
         return result;
+    }
+
+    public InstantiationStrategy getInstantiationStrategy() {
+        return instantiationStrategy;
+    }
+
+    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
+        this.instantiationStrategy = instantiationStrategy;
     }
 
 }

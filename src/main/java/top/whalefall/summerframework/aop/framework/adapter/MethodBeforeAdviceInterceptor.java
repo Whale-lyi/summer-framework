@@ -11,9 +11,15 @@ import top.whalefall.summerframework.aop.MethodBeforeAdvice;
  */
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor {
 
-    private final MethodBeforeAdvice advice;
+    private MethodBeforeAdvice advice;
+
+    public MethodBeforeAdviceInterceptor() {}
 
     public MethodBeforeAdviceInterceptor(MethodBeforeAdvice advice) {
+        this.advice = advice;
+    }
+
+    public void setAdvice(MethodBeforeAdvice advice) {
         this.advice = advice;
     }
 

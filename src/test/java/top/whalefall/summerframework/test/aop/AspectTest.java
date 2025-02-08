@@ -1,11 +1,15 @@
 package top.whalefall.summerframework.test.aop;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.junit.Test;
 import top.whalefall.summerframework.aop.AdvisedSupport;
+import top.whalefall.summerframework.aop.ClassFilter;
 import top.whalefall.summerframework.aop.TargetSource;
 import top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcut;
+import top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import top.whalefall.summerframework.aop.framework.ProxyFactory;
 import top.whalefall.summerframework.aop.framework.adapter.MethodBeforeAdviceInterceptor;
+import top.whalefall.summerframework.context.support.ClassPathXmlApplicationContext;
 import top.whalefall.summerframework.test.bean.AwareService;
 import top.whalefall.summerframework.test.bean.IUserService;
 import top.whalefall.summerframework.test.bean.UserService;
@@ -20,6 +24,46 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @date 2025/2/7
  */
 public class AspectTest {
+
+	/**
+	 * 测试AOP融入Bean生命周期
+	 */
+	@Test
+	public void testAutoProxy() throws Exception {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_auto_proxy.xml");
+		applicationContext.registerShutdownHook();
+
+		IUserService userService = applicationContext.getBean("userService", IUserService.class);
+		System.out.println("测试结果：" + userService.register("zhangsan"));
+	}
+
+	/**
+	 * 测试PointcutAdvisor
+	 */
+	@Test
+	public void testAdvisor() throws Exception {
+		IUserService userService = new UserService();
+
+		//Advisor是Pointcut和Advice的组合
+		AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
+		advisor.setExpression("execution(* top.whalefall.summerframework.test.bean.IUserService.*(..))");
+		MethodBeforeAdviceInterceptor methodInterceptor = new MethodBeforeAdviceInterceptor(new UserServiceBeforeAdvice());
+		advisor.setAdvice(methodInterceptor);
+
+		ClassFilter classFilter = advisor.getPointcut().getClassFilter();
+		if (classFilter.matches(userService.getClass())) {
+			AdvisedSupport advisedSupport = new AdvisedSupport();
+
+			TargetSource targetSource = new TargetSource(userService);
+			advisedSupport.setTargetSource(targetSource);
+			advisedSupport.setMethodInterceptor((MethodInterceptor) advisor.getAdvice());
+			advisedSupport.setMethodMatcher(advisor.getPointcut().getMethodMatcher());
+//			advisedSupport.setProxyTargetClass(true);   //JDK or CGLIB
+
+			IUserService proxy = (IUserService) new ProxyFactory(advisedSupport).getProxy();
+			System.out.println(proxy.register("whale"));
+		}
+	}
 
 	/**
 	 * 测试BeforeAdvice
