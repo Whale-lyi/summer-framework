@@ -33,7 +33,8 @@ public class AspectTest {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_auto_proxy.xml");
 		applicationContext.registerShutdownHook();
 
-		IUserService userService = applicationContext.getBean("userService", IUserService.class);
+		UserService userService = applicationContext.getBean("userService", UserService.class);
+		System.out.println(userService);
 		System.out.println("测试结果：" + userService.register("zhangsan"));
 	}
 

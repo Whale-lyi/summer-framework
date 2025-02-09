@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userService" class="top.whalefall.summerframework.test.bean.UserService"/>
+    <bean id="userService" class="top.whalefall.summerframework.test.bean.UserService">
+        <property name="location" value="Nanjing"/>
+    </bean>
 
     <bean class="top.whalefall.summerframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
@@ -12,7 +14,7 @@
     </bean>
 
     <bean id="pointcutAdvisor" class="top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
-        <property name="expression" value="execution(* top.whalefall.summerframework.test.bean.IUserService.*(..))"/>
+        <property name="expression" value="execution(* top.whalefall.summerframework.test.bean.UserService.*(..))"/>
         <property name="advice" ref="methodInterceptor"/>
     </bean>
 
