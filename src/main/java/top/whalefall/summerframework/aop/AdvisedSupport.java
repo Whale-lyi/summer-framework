@@ -11,8 +11,8 @@ import org.aopalliance.intercept.MethodInterceptor;
  */
 public class AdvisedSupport {
 
-    //是否使用cglib代理
-    private boolean proxyTargetClass = false;
+    // 是否使用cglib代理
+    private boolean proxyTargetClass = true;
 
     // 被代理的目标对象
     private TargetSource targetSource;

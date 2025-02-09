@@ -9,7 +9,6 @@ import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.PropertyValues;
 import top.whalefall.summerframework.beans.factory.BeanFactory;
 import top.whalefall.summerframework.beans.factory.BeanFactoryAware;
-import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.support.DefaultListableBeanFactory;
 

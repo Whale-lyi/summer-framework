@@ -21,9 +21,15 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     protected static final Object NULL_OBJECT = new Object();
 
     /**
-     * 单例 Bean 对象
+     * 一级缓存，存放构建完成的bean
      */
-    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256); //一级缓存
+
+    /**
+     * 二级缓存，存放半成品
+     */
+    protected final Map<String, Object> earlySingletonObjects = new HashMap<>(16); // 二级缓存
+
 
     /**
      * 有销毁方法的bean
@@ -32,11 +38,16 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
     @Override
     public Object getSingleton(String beanName) {
-        return singletonObjects.get(beanName);
+        Object bean = singletonObjects.get(beanName);
+        if (bean == null) {
+            bean = earlySingletonObjects.get(beanName);
+        }
+        return bean;
     }
 
     @Override
     public void registerSingleton(String beanName, Object singletonObject) {
+        earlySingletonObjects.remove(beanName);
         singletonObjects.put(beanName, singletonObject);
     }
 
