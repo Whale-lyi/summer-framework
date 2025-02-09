@@ -17,6 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationContextTest {
 
 	/**
+	 * 测试 @Autowired
+	 */
+	@Test
+	public void testAutowiredAnnotation() throws Exception {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_autowired.xml");
+
+		UserService userService = applicationContext.getBean("userService", UserService.class);
+		System.out.println(userService);
+		assertThat(userService.getCompany()).isEqualTo("Tencent");
+		assertThat(userService.getLocation()).isEqualTo("Shang Hai");
+		System.out.println(userService.queryUserInfo());
+	}
+
+	/**
 	 * 测试 @Value
 	 */
 	@Test

@@ -3,6 +3,7 @@ package top.whalefall.summerframework.test.bean;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.factory.DisposableBean;
 import top.whalefall.summerframework.beans.factory.InitializingBean;
+import top.whalefall.summerframework.beans.factory.annotation.Autowired;
 import top.whalefall.summerframework.beans.factory.annotation.Value;
 import top.whalefall.summerframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ public class UserService implements IUserService, InitializingBean, DisposableBe
     @Value("${location}")
     private String location;
 
+    @Autowired
     private IUserDao userDao;
 
     @Override
