@@ -23,11 +23,6 @@ public class ProxyBeanFactory implements FactoryBean<IUserDao> {
     }
 
     @Override
-    public Class<IUserDao> getObjectType() {
-        return IUserDao.class;
-    }
-
-    @Override
     public boolean isSingleton() {
         return true;
     }

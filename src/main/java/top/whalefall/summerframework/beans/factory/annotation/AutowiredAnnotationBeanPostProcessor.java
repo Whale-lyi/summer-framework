@@ -1,12 +1,14 @@
 package top.whalefall.summerframework.beans.factory.annotation;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.TypeUtil;
 import top.whalefall.summerframework.beans.BeansException;
 import top.whalefall.summerframework.beans.PropertyValues;
 import top.whalefall.summerframework.beans.factory.BeanFactory;
 import top.whalefall.summerframework.beans.factory.BeanFactoryAware;
 import top.whalefall.summerframework.beans.factory.ConfigurableListableBeanFactory;
 import top.whalefall.summerframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import top.whalefall.summerframework.core.convert.ConversionService;
 
 import java.lang.reflect.Field;
 
@@ -32,8 +34,19 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         for (Field field : fields) {
             Value valueAnnotation = field.getAnnotation(Value.class);
             if (valueAnnotation != null) {
-                String value = valueAnnotation.value();
-                value = beanFactory.resolveEmbeddedValue(value);
+                Object value = valueAnnotation.value();
+                value = beanFactory.resolveEmbeddedValue((String) value);
+
+                //类型转换
+                Class<?> sourceType = value.getClass();
+                Class<?> targetType = (Class<?>) TypeUtil.getType(field);
+                ConversionService conversionService = beanFactory.getConversionService();
+                if (conversionService != null) {
+                    if (conversionService.canConvert(sourceType, targetType)) {
+                        value = conversionService.convert(value, targetType);
+                    }
+                }
+
                 BeanUtil.setFieldValue(bean, field.getName(), value);
             }
         }

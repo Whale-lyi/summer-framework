@@ -6,6 +6,7 @@ import top.whalefall.summerframework.beans.factory.FactoryBean;
 import top.whalefall.summerframework.beans.factory.config.BeanDefinition;
 import top.whalefall.summerframework.beans.factory.config.BeanPostProcessor;
 import top.whalefall.summerframework.beans.factory.config.ConfigurableBeanFactory;
+import top.whalefall.summerframework.core.convert.ConversionService;
 import top.whalefall.summerframework.util.ClassUtils;
 import top.whalefall.summerframework.util.StringValueResolver;
 
@@ -23,6 +24,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     private final ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
     private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
+
+    private ConversionService conversionService;
 
     @Override
     public Object getBean(String name) throws BeansException {
@@ -96,5 +99,22 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             result = resolver.resolveStringValue(result);
         }
         return result;
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return containsBeanDefinition(name);
+    }
+
+    protected abstract boolean containsBeanDefinition(String beanName);
+
+    @Override
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
+
+    @Override
+    public ConversionService getConversionService() {
+        return conversionService;
     }
 }

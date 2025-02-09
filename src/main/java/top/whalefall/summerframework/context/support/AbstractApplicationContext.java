@@ -13,13 +13,17 @@ import top.whalefall.summerframework.context.event.ApplicationEventMulticaster;
 import top.whalefall.summerframework.context.event.ContextClosedEvent;
 import top.whalefall.summerframework.context.event.ContextRefreshedEvent;
 import top.whalefall.summerframework.context.event.SimpleApplicationEventMulticaster;
+import top.whalefall.summerframework.core.convert.ConversionService;
 import top.whalefall.summerframework.core.io.DefaultResourceLoader;
 
 import java.util.Collection;
 import java.util.Map;
 
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
-    private static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+
+    public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+
+    public static final String CONVERSION_SERVICE_BEAN_NAME = "conversionService";
 
     private ApplicationEventMulticaster applicationEventMulticaster;
 
@@ -42,10 +46,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         initApplicationEventMulticaster();
         // 7. 注册事件监听器
         registerListeners();
-        // 8. 提前实例化单例Bean对象
-        beanFactory.preInstantiateSingletons();
+        // 8. 注册类型转换器和提前实例化单例bean
+        finishBeanFactoryInitialization(beanFactory);
         // 9. 发布容器刷新完成事件
         finishRefresh();
+    }
+
+    protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+        //设置类型转换器
+        if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME)) {
+            Object conversionService = beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME);
+            if (conversionService instanceof ConversionService) {
+                beanFactory.setConversionService((ConversionService) conversionService);
+            }
+        }
+
+        //提前实例化单例bean
+        beanFactory.preInstantiateSingletons();
     }
 
     private void registerListeners() {
@@ -99,6 +116,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         publishEvent(new ContextClosedEvent(this));
         // 执行销毁单例bean的方法
         getBeanFactory().destroySingletons();
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return getBeanFactory().containsBean(name);
     }
 
     @Override

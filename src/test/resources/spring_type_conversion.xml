@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="car" class="top.whalefall.summerframework.test.bean.Car">
+        <property name="price" value="1000000"/>
+        <property name="produceDate" value="2021-01-01"/>
+    </bean>
+
+    <bean id="conversionService" class="top.whalefall.summerframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters" ref="converters"/>
+    </bean>
+
+    <bean id="converters" class="top.whalefall.summerframework.test.common.ConvertersFactoryBean"/>
+
+</beans>

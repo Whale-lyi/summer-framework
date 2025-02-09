@@ -1,6 +1,7 @@
 package top.whalefall.summerframework.beans.factory.config;
 
 import top.whalefall.summerframework.beans.factory.HierarchicalBeanFactory;
+import top.whalefall.summerframework.core.convert.ConversionService;
 import top.whalefall.summerframework.util.StringValueResolver;
 
 /**
@@ -21,5 +22,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
     void addEmbeddedValueResolver(StringValueResolver valueResolver);
 
     String resolveEmbeddedValue(String value);
+
+    void setConversionService(ConversionService conversionService);
+
+    ConversionService getConversionService();
 
 }
