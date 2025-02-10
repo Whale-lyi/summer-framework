@@ -79,6 +79,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
                     return (beanDefinition.getBeanClass() != BeanFactoryPostProcessor.class) &&
                             (beanDefinition.getBeanClass() != BeanPostProcessor.class);
                 })
-                .forEach(this::getBean);
+                .forEach(beanName -> {
+                    if (beanDefinitionMap.get(beanName).isSingleton()) {
+                        getBean(beanName);
+                    }
+                });
     }
 }
