@@ -13,6 +13,8 @@ import top.whalefall.summerframework.beans.factory.config.InstantiationAwareBean
 import top.whalefall.summerframework.beans.factory.support.DefaultListableBeanFactory;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Liu Yu
@@ -25,10 +27,20 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
     private DefaultListableBeanFactory beanFactory;
 
+    private Set<Object> earlyProxyReferences = new HashSet<>();
+
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (!earlyProxyReferences.contains(bean)) {
+            return wrapIfNecessary(bean, beanName);
+        }
+
+        return bean;
+    }
+
+    protected Object wrapIfNecessary(Object bean, String beanName) {
         if (isInfrastructureClass(bean.getClass())) {
-            return null;
+            return bean;
         }
 
         Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
@@ -84,5 +96,11 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
         return pvs;
+    }
+
+    @Override
+    public Object getEarlyBeanReference(Object bean, String beanName) throws BeansException {
+        earlyProxyReferences.add(beanName);
+        return wrapIfNecessary(bean, beanName);
     }
 }

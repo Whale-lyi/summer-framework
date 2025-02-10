@@ -12,7 +12,7 @@
     <bean class="top.whalefall.summerframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
     <bean id="pointcutAdvisor" class="top.whalefall.summerframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
-        <property name="expression" value="execution(* top.whalefall.summerframework.test.bean.A.*(..))"/>
+        <property name="expression" value="execution(* top.whalefall.summerframework.test.bean.A.func(..))"/>
         <property name="advice" ref="methodInterceptor"/>
     </bean>
 
