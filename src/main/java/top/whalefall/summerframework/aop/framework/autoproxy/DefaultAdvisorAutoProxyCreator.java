@@ -31,7 +31,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (!earlyProxyReferences.contains(bean)) {
+        if (!earlyProxyReferences.contains(beanName)) {
             return wrapIfNecessary(bean, beanName);
         }
 
